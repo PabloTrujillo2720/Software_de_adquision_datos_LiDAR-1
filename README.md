@@ -57,7 +57,13 @@ Para las demás librerías se realiza el mismo proceso de instalación como lo s
     
 ## Algoritmos
 
-Se utilizaron 3 algoritmos en python para realizar el procesamiento, donde este es un ejemplo del primero
+Se utilizaron 3 algoritmos en python para realizar el procesamiento, donde se enumeran como paso 1, paso 2 y paso 3.
+
+Dicho orden tiene como intencion generar 2 archivos de excel en el paso 1 y unirlo en el paso 2, donde el paso 3 se trata de un archivo que realiza cientos calculos estadisticos y combinacion de mas datos de requerirse.
+
+### Aclaraciones Algoritmos
+
+Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 200 recopilaciones de datos proporcionados por el sensor laser, apartir de ahí dichos datos se promedian para sacar un solo valor en la nube de puntos que genera, esto se hace con el objetivo de filtrar de una forma practica sichos datos, mientras que los algoritmos siguientes son de procesado y filtrado, se tiene un ejemplo de la primera seccion del algoritmo:
 
     import glob
     from operator import index
