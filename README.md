@@ -1,4 +1,4 @@
-# ROS_TO_EXCEL
+# Software de aquision de datos LiDAR
 
 Se utilizo un sensor laser de tecnologia LiDAR de referencia SICK_lms_500-20000 PRO, para que por medio de python se obtuvieran los datos que el sensor envia, siendo procesado atravez de ROS (Robot Operating System) en la version Noetic en ubuntu 20.04, acompañado de una camara de video y un sensor de ultrasonido, con el objetivo de realizar procesamiento y analisis estadisticos en un archivo de excel a los datos proporcionados por los distintos sensores, enfocado a la experimentacion en cuerpos de agua.
 
