@@ -174,63 +174,7 @@ Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 
                   print("Creando archivo de control rango")
                   df_range.to_csv(ruta_datos+"/control_range.csv",index=False) 
 
-      #Se guardan los valores de intensidades luego de haberlos promediado 100 veces (Variable N, linea 30)
-      intensities_np = np.array(intensidades)
-      if FLAG_first_time1==0:
-          n_points1=len(intensidades)
-          FLAG_first_time1=1
-          M_intensities=np.empty([n_points1,N])
-
-      else:
-          if counter1<N:
-              M_intensities[:,counter1]=intensities_np
-              counter1=counter1+1
-          else:
-
-              promedio_int = np.average(M_intensities, axis=1)
-              df_int = pd.DataFrame(promedio_int)
-              #Se confirma si el archivo de control existe
-              name_int = ruta_datos+"/control_int.csv"
-              comprobacio_int = os.path.isfile(name_int)
-
-              if comprobacio_int == True:
-                  #Si el archivo de control existe genera el archivo de prueba
-                  print("Creando archico de prueba intensidad")
-                  df_int.to_csv(ruta_datos+"/prueba_int.csv",index=False) 
-
-                  #Comando para terminar el ciclo "Callback"
-                  rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
-
-
-              else:
-                  #Si el archivo de control no existe genera el archivo de prueba
-                  print("Creando archivo de control intensidad")
-                  df_int.to_csv(ruta_datos+"/control_int.csv",index=False) 
-                  rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
-
-  def listener():
-      #Nodo de ROS que recibe los datos del sensor LiDAR
-      rospy.init_node('ROS_to_EXCEL', anonymous=True)
-      rospy.Subscriber('/scan', LaserScan, callback)
-      rospy.spin()
-
-
-  if __name__ == '__main__':
-      listener()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 ### Autores:
 
 **Universidad de Ibagué** - **Ingeniería Electrónica** - **Semestre de Paz y Region**
