@@ -81,32 +81,32 @@ La interfaz grafica se compone de 2 archivos en lenguaje python, 1 archvio css y
 
 Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 100 recopilaciones de datos proporcionados por el sensor laser, apartir de ahí dichos datos se promedian para sacar un solo valor en la nube de puntos que genera, esto se hace con el objetivo de filtrar de una forma practica sichos datos, mientras que los algoritmos siguientes son de procesado y filtrado, se tiene un ejemplo de la primera seccion del algoritmo:
 
-  #Importamps las librerias necesarias
-  import glob
-  from operator import index
-  from re import X
-  from statistics import median_high
-  from sys import api_version
-  from matplotlib.pyplot import axis
-  from numpy import append, column_stack
-  import pandas as pd
-  import rospy
-  from sensor_msgs.msg import LaserScan
-  import numpy as np
-  import time as time 
-  from pathlib import Path
-  import os
-  #Definimos variables de conteo y banderas
-  N = 100 # numero de escaneos a promediar
-  counter=0
-  counter1 = 0
-  FLAG_first_time=0
-  FLAG_first_time1=0
-  n_points=0
-  n_points1=0
+    #Importamps las librerias necesarias
+    import glob
+    from operator import index
+    from re import X
+    from statistics import median_high
+    from sys import api_version
+    from matplotlib.pyplot import axis
+    from numpy import append, column_stack
+    import pandas as pd
+    import rospy
+    from sensor_msgs.msg import LaserScan
+    import numpy as np
+    import time as time 
+    from pathlib import Path
+    import os
+    #Definimos variables de conteo y banderas
+    N = 100 # numero de escaneos a promediar
+    counter=0
+    counter1 = 0
+    FLAG_first_time=0
+    FLAG_first_time1=0
+    n_points=0
+    n_points1=0
 
 
-  def callback(data):
+    def callback(data):
       #Definimos variables y rutas de carpetas
       global ruta_datos
       ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
