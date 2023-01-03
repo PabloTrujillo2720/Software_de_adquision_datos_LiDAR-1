@@ -13,7 +13,7 @@ Se utilizo un sensor laser de tecnologia LiDAR de referencia SICK_lms_500-20000 
 -   Python 3.8 :
     - Pandas
     - Numpy
-
+    - matplotlib
 
 ## Instalacion ROS Noetic
 
@@ -32,6 +32,7 @@ Como se muestra a continuación son las librerías que se utilizó para la elabo
 
     import numpy as np
     import pandas as pd
+    from matplotlib.pyplot import axis
     
 Ahora se mostrará como se hace la instalación de las librerías
 
@@ -57,116 +58,167 @@ Para las demás librerías se realiza el mismo proceso de instalación como lo s
     
 ## Algoritmos
 
-Se utilizaron 3 algoritmos en python para realizar el procesamiento, donde se enumeran como paso 1, paso 2 y paso 3.
+Se utilizaron 5 algoritmos en python para realizar el procesamiento, donde el orden de desarrollo es:
 
-Dicho orden tiene como intencion generar 2 archivos de excel en el paso 1 y unirlo en el paso 2, donde el paso 3 se trata de un archivo que realiza cientos calculos estadisticos y combinacion de mas datos de requerirse.
+1. datos.py
+  - Nodo recolector de los datos provenientes del sensor LiDAR.
+2. principal.py
+  - Archivo principal donde se hacen filtrados de los datos y los respectivos llamados de los otros archivos.
+3. graficas.py
+  - Archivo donde se generan el analisis estadistico de los datos y las graficas de la prueba efectuada.
+4. correo.py
+  - Archivo donde se gestiona el envio de variables estadisticas, imagenes y datos en bruto.
+5. lanzador.py
+  - Archivo que sirve como actuador para cuando se recibe un ingreso de datos proveniente de la interfaz grafica.
+
+## Interfaz grafica
+
+Se realizo una interfaz grafica diseña apartir del framework "Flask" donde se recibiran los parametros de medicion que el usuario ingrese, junto al envio de un mensaje al correo electronico ingresado con los datos en bruto de la medicion en un archvio csv, un grafico de la medicion de prueba realizada junto a los datos estadisticos de la prueba.
+
+La interfaz grafica se compone de 2 archivos en lenguaje python, 1 archvio css y 3 archvios html
 
 ### Aclaraciones Algoritmos
 
-Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 200 recopilaciones de datos proporcionados por el sensor laser, apartir de ahí dichos datos se promedian para sacar un solo valor en la nube de puntos que genera, esto se hace con el objetivo de filtrar de una forma practica sichos datos, mientras que los algoritmos siguientes son de procesado y filtrado, se tiene un ejemplo de la primera seccion del algoritmo:
+Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 100 recopilaciones de datos proporcionados por el sensor laser, apartir de ahí dichos datos se promedian para sacar un solo valor en la nube de puntos que genera, esto se hace con el objetivo de filtrar de una forma practica sichos datos, mientras que los algoritmos siguientes son de procesado y filtrado, se tiene un ejemplo de la primera seccion del algoritmo:
 
-    import glob
-    from operator import index
-    from re import X
-    from statistics import median_high
-    from sys import api_version
-    from matplotlib.pyplot import axis
-    from numpy import append, column_stack
-    import pandas as pd
-    import rospy
-    from sensor_msgs.msg import LaserScan
-    import numpy as np
-
-    N = 200 # numero de escaneos a promediar
-    counter=0
-    counter1 = 0
-    FLAG_first_time=0
-    FLAG_first_time1=0
-    n_points=0
-    n_points1=0
-
-    def callback(data):
-        global N
-        global counter
-        global counter1
-        global FLAG_first_time
-        global FLAG_first_time1
-        global n_points
-        global n_points1
-        global M_ranges
-        global M_intensities
-
-        min_angle= data.angle_min
-        max_angle= data.angle_max
-        ranges = data.ranges
-        intensities = data.intensities
+   #Importamps las librerias necesarias
+import glob
+from operator import index
+from re import X
+from statistics import median_high
+from sys import api_version
+from matplotlib.pyplot import axis
+from numpy import append, column_stack
+import pandas as pd
+import rospy
+from sensor_msgs.msg import LaserScan
+import numpy as np
+import time as time 
+from pathlib import Path
+import os
+#Definimos variables de conteo y banderas
+N = 100 # numero de escaneos a promediar
+counter=0
+counter1 = 0
+FLAG_first_time=0
+FLAG_first_time1=0
+n_points=0
+n_points1=0
 
 
-        #Ciclo de los rangos:
-        #print(dir(data))
-        #print("typesssssssssssss",type(data.ranges))
-        #print(dir(data.ranges))
-        ranges_np = np.array(ranges)
-        if FLAG_first_time==0:
-            n_points=len(ranges)
-            FLAG_first_time=1
-            M_ranges=np.empty([n_points,N])
-            #print("El escaneo tiene ", n_points, " puntos" )
+def callback(data):
+    #Definimos variables y rutas de carpetas
+    global ruta_datos
+    ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
+    global N
+    global counter
+    global counter1
+    global FLAG_first_time
+    global FLAG_first_time1
+    global n_points
+    global n_points1
+    global M_ranges
+    global M_intensities
+    global bandera1
+    min_angle= data.angle_min
+    max_angle= data.angle_max
+    bandera1 = 0
+
+    #Se leé el archivo temporal donde se almacenan los datos recibidos de medicion
+    df = pd.read_csv("temp.csv")
+    angulo_min_ingresado = int(df.loc[0][0])
+    angulo = angulo_min_ingresado
+    #Como el sensor LiDAR toma un total de 381 puntos en 190°, se toma que cada haz de luz tiene 
+    #un cambio en el angulo de barrido de 0.5°
+    punto = int(angulo*2)
+    angulo_max_ingresado = int(df.iloc[1][0])
+    #Se guardan los valores recibidos del LiDAR
+    ranges = data.ranges
+    intensities = data.intensities
+    #se definen vectores vacios de intensidad y rango 
+    #donde se guardaran los intervalos de valores tomados del LiDAR 
+    intensidades = []
+    rangos = []   
+    inicio_for = angulo*2
+    final_for = angulo_max_ingresado*2
+    for i in range(inicio_for,final_for):
+        angulo = angulo + 0.5
+        intensidades.append(intensities[punto])
+        rangos.append(ranges[punto])
+        punto = punto + 1
+    #Se guardan los valores de rangos luego de haberlos promediado 100 veces (Variable N, linea 30)
+    ranges_np = np.array(rangos)
+    if FLAG_first_time==0:
+        n_points=len(rangos)
+        FLAG_first_time=1
+        M_ranges=np.empty([n_points,N])
+    else:
+        if counter<N:
+            M_ranges[:,counter]=ranges_np
+            counter=counter+1
         else:
-            if counter<N:
-                M_ranges[:,counter]=ranges_np
-                counter=counter+1
+            #Se genera archivo csv de control de los datos de rango
+            "Archivo de control: Toma de datos base del lugar de experimentacion"
+            print("Acumulando Datos:")
+            promedio_ran = np.average(M_ranges, axis=1)
+            df_range = pd.DataFrame(promedio_ran)
+            #Se confirma si el archivo de control existe
+            name_range = ruta_datos+"/control_range.csv"
+            comprobacion_range = os.path.isfile(name_range)
+            #Si el archivo de control existe genera el archivo de prueba
+
+            if comprobacion_range == True:
+                print("Creando archico de prueba rango")
+                df_range.to_csv(ruta_datos+"/prueba_range.csv",index=False) 
             else:
-                print("Datos Acumulados:")
-                promedio_ran = np.average(M_ranges, axis=1)          
-                df_range = pd. DataFrame(promedio_ran)
-                df_range.to_csv("/home/pablotrujillo/ros_catkin_ws/src/laser/datos_excel/datos_ran1.csv",index=False)  
+                print("Creando archivo de control rango")
+                df_range.to_csv(ruta_datos+"/control_range.csv",index=False) 
+                
+    #Se guardan los valores de intensidades luego de haberlos promediado 100 veces (Variable N, linea 30)
+    intensities_np = np.array(intensidades)
+    if FLAG_first_time1==0:
+        n_points1=len(intensidades)
+        FLAG_first_time1=1
+        M_intensities=np.empty([n_points1,N])
+    
+    else:
+        if counter1<N:
+            M_intensities[:,counter1]=intensities_np
+            counter1=counter1+1
+        else:
 
-    def listener():
+            promedio_int = np.average(M_intensities, axis=1)
+            df_int = pd.DataFrame(promedio_int)
+            #Se confirma si el archivo de control existe
+            name_int = ruta_datos+"/control_int.csv"
+            comprobacio_int = os.path.isfile(name_int)
 
-        # In ROS, nodes are uniquely named. If two nodes with the same
-        # name are launched, the previous one is kicked off. The
-        # anonymous=True flag means that rospy will choose a unique
-        # name for our 'listener' node so that multiple listeners can
-        # run simultaneously.
-        rospy.init_node('ROS_to_EXCEL', anonymous=True)
+            if comprobacio_int == True:
+                #Si el archivo de control existe genera el archivo de prueba
+                print("Creando archico de prueba intensidad")
+                df_int.to_csv(ruta_datos+"/prueba_int.csv",index=False) 
+                
+                #Comando para terminar el ciclo "Callback"
+                rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
 
-        rospy.Subscriber('/scan', LaserScan, callback)
+        
+            else:
+                #Si el archivo de control no existe genera el archivo de prueba
+                print("Creando archivo de control intensidad")
+                df_int.to_csv(ruta_datos+"/control_int.csv",index=False) 
+                rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
 
-        # spin() simply keeps python from exiting until this node is stopped
-        rospy.spin()
-
-    if _name_ == '_main_':
-        listener()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def listener():
+    #Nodo de ROS que recibe los datos del sensor LiDAR
+    rospy.init_node('ROS_to_EXCEL', anonymous=True)
+    rospy.Subscriber('/scan', LaserScan, callback)
+    rospy.spin()
 
 
+if __name__ == '__main__':
+    listener()
 
-
-
-
+    
 
 
 
