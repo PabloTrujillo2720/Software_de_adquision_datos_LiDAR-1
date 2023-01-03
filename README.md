@@ -82,13 +82,13 @@ La interfaz grafica se compone de 2 archivos en lenguaje python, 1 archvio css y
 La forma de utilizar los algoritmo es:
 Tener un espacion de trabajo de ROS, donde se debera definir una carpeta donde se contendran los 5 algoritmos y a su vez tendra otra carpeta donde se contendran los archivos de la interfaz grafica, donde la forma de iniciar la interfaz grafica es con el comando:
 
-  python3 iniciar.py
+    python3 iniciar.py
  
 Para que de esta manera la pagina web quede lista para recibir los datos que ingrese el usuario.
 
 Seguidamente se debe ejecutar el archivo "lanzador.py", con el siguiente comando:
 
-  python3 lanzador.py
+    python3 lanzador.py
   
 Lo que hace este algoritmo es quedarse esperando el ingreso de los datos por medio de la interfaz grafica para de forma automatica ejecutar los archvios encargados de recolectar los datos.
 
