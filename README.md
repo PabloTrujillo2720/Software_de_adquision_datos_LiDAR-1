@@ -79,9 +79,24 @@ La interfaz grafica se compone de 2 archivos en lenguaje python, 1 archvio css y
 
 ### Aclaraciones Algoritmos
 
+La forma de utilizar los algoritmo es:
+Tener un espacion de trabajo de ROS, donde se debera definir una carpeta donde se contendran los 5 algoritmos y a su vez tendra otra carpeta donde se contendran los archivos de la interfaz grafica, donde la forma de iniciar la interfaz grafica es con el comando:
+
+  python3 iniciar.py
+ 
+Para que de esta manera la pagina web quede lista para recibir los datos que ingrese el usuario.
+
+Seguidamente se debe ejecutar el archivo "lanzador.py", con el siguiente comando:
+
+  python3 lanzador.py
+  
+Lo que hace este algoritmo es quedarse esperando el ingreso de los datos por medio de la interfaz grafica para de forma automatica ejecutar los archvios encargados de recolectar los datos.
+
+De esta manera se estara esperando la entrada de datos para su posterior envio al correo electronico definido por el usuario.
+
 Uno de los parametros relevantes sobre el algoritmo es que se parte de realizar 100 recopilaciones de datos proporcionados por el sensor laser, apartir de ahí dichos datos se promedian para sacar un solo valor en la nube de puntos que genera, esto se hace con el objetivo de filtrar de una forma practica sichos datos, mientras que los algoritmos siguientes son de procesado y filtrado, se tiene un ejemplo de la primera seccion del algoritmo:
 
-    #Importamps las librerias necesarias
+    #Importamos las librerias necesarias
     import glob
     from operator import index
     from re import X
