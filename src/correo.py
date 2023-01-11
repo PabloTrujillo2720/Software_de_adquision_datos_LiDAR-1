@@ -116,7 +116,7 @@ def mail():
     YNSE= NSE_(Y_control, Y_prueba)
     iNSE= NSE_(intesidad_base, intesidad_prueba)
     
-    #RMSE()
+    RMSE()
 
     #Lectura de archivo con valores temporales de la pagina web 
     df = pd.read_csv("temp2.csv")
