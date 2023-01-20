@@ -70,6 +70,8 @@ Se utilizaron 5 algoritmos en python para realizar el procesamiento, donde el or
   - Archivo donde se gestiona el envio de variables estadisticas, imagenes y datos en bruto.
 5. lanzador.py
   - Archivo que sirve como actuador para cuando se recibe un ingreso de datos proveniente de la interfaz grafica.
+6. datos_sonar.py
+  - Nodo recolector de los datos provenientes del sensor de ultrasonido.
 
 ## Interfaz grafica
 
