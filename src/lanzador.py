@@ -35,7 +35,9 @@ def lanzador_archivo():
 
         if comprobacio_lanzador == True:
             import principal
+            import datos_sonar
             print("Entrando a principal-----------")
+            datos_sonar.listener_sonar()
             #time.sleep(3)
             principal.__main__()
             print("Saliendo a principal-----------")
@@ -52,4 +54,5 @@ def lanzador_archivo():
             time.sleep(5)
 
 lanzador_archivo()
+
 
