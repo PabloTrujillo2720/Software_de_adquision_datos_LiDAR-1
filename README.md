@@ -58,7 +58,7 @@ Para las demás librerías se realiza el mismo proceso de instalación como lo s
     
 ## Algoritmos
 
-Se utilizaron 5 algoritmos en python para realizar el procesamiento, donde el orden de desarrollo es:
+Se utilizaron 6 algoritmos en python para realizar el procesamiento, donde el orden de desarrollo es:
 
 1. datos.py
   - Nodo recolector de los datos provenientes del sensor LiDAR.
