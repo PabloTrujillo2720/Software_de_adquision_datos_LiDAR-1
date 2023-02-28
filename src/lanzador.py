@@ -1,43 +1,27 @@
 import pandas as pd 
 import time as time
 
-valor1 = 0
-"""df = pd.read_csv("temp.csv")
-
-valor1 = int(df.iloc[2])
-
-print(valor1)"""
-
-def lanzador_numero(): 
-
-    if valor1 == 0:
-
-        print("No ha entrado")
-        time.sleep(3)
-    
-    if valor1 == 1:
-
-        import principal
-
-        principal.__main__()
-
+global bandera
 
 def lanzador_archivo():
 
     import os as os 
     from os import remove
     import time as time
-    ruta = "/home/pablotrujillo/catkin_ws_final/src"
-    while True:
+    ruta = "/home/pablotrujillo/catkin_ws_final/src/pagina/src"
+    bandera = 1
+    while bandera == 1:
         bandera_lanzador = ruta+"/temp.csv"
         comprobacio_lanzador = os.path.isfile(bandera_lanzador)
         print("Existen los archivos de control:",comprobacio_lanzador)
 
         if comprobacio_lanzador == True:
+            from codigos import principal
+            from codigos import datos
+            from codigos import graficas
+            from codigos import correo
             import principal
-            import datos_sonar
             print("Entrando a principal-----------")
-            datos_sonar.listener_sonar()
             #time.sleep(3)
             principal.__main__()
             print("Saliendo a principal-----------")
@@ -46,6 +30,14 @@ def lanzador_archivo():
             #time.sleep(3)
             remove("temp.csv")
             print("archivo eliminado")
+
+            os.system("python3 lanzador.py")
+
+            bandera = 0
+
+            time.sleep(2)
+
+            
             
 
         if comprobacio_lanzador == False:
@@ -54,5 +46,3 @@ def lanzador_archivo():
             time.sleep(5)
 
 lanzador_archivo()
-
-

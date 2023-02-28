@@ -12,7 +12,7 @@ import datos as dl4
 
 global ruta_datos
 #Ruta del espacio de trabajo de ROS
-ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
+ruta_datos = "/home/pablotrujillo/catkin_ws_final/src/pagina/src"
 def control():
     #Llamamos a Callback desde datos
     dl4.listener()
@@ -81,7 +81,7 @@ def __main__():
     name_prueba = ruta_datos+ "/prueba_int.csv"
     comprobacio_prueba = os.path.isfile(name_prueba)
     print("Existen los archivos de prueba:",comprobacio_prueba)
-    control()
+    #control()
     #comprueba si el archivo de prueba fue generado para realizar el procesamiento grafico, estadistico
     #Y el correspondiente envio del correo electronico.
     if comprobacio_prueba == True:

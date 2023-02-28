@@ -14,7 +14,7 @@ from datetime import datetime
 
 global ruta_datos
 #Ruta del espacio de trabajo de ROS
-ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
+ruta_datos = "/home/pablotrujillo/catkin_ws_final/src/pagina/src"
 
 def root_mean_squared_error(x,y):
     n=len(x.T)
@@ -74,10 +74,11 @@ def graficas():
 
     datos.to_csv(ruta_datos + "/df_graficas.csv", index=False)
     datos.to_csv(ruta_datos + "/Temp_graficas.csv", index=False)
-    datos.to_csv(ruta_datos + name, index=False)
+    #datos.to_csv(ruta_datos + name, index=False)
     #Configuracion de graficas y generacion de archivo .png
     plt.figure()
     plt.plot(X_control.T,Y_control.T,'.',label='Control')
+    #plt.plot(X_prueba.T*0.995,Y_prueba.T*0.995,'.',label='Prueba')
     plt.plot(X_prueba.T,Y_prueba.T,'.',label='Prueba')
     plt.grid()
     plt.legend()
@@ -85,12 +86,12 @@ def graficas():
     plt.ylabel("Y [m]")
     #solo tanque
     plt.xlim(-1.5, 0.8)#-2.5, 10
-    plt.ylim(-1.8, -0.6)#-2.0, 0.5
+    plt.ylim(-2.0, -0.6)#-2.0, 0.5
     #toma entera
     #plt.xlim(-2.5, 10.0)#-2.5, 10
     #plt.ylim(-2.0, -0.5)#-2.0, 0.5
     plt.savefig("Temp_graficas"+".png", dpi=600)
-    plt.savefig(name_png, dpi=600)
+    #plt.savefig(name_png, dpi=600)
     #plt.show()
 
 def nombre():
@@ -99,7 +100,7 @@ def nombre():
     global name
     global name_png
     fecha = str(datetime.today())
-    name = "Datos_"+ fecha + ".csv"
+    name = "/Datos_"+ fecha + ".csv"
     name_png = "Datos_"+ fecha + ".png"
 
 def RMSE():
@@ -119,4 +120,3 @@ def RMSE():
 nombre()
 graficas()
 RMSE()
-

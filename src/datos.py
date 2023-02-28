@@ -13,6 +13,7 @@ import numpy as np
 import time as time 
 from pathlib import Path
 import os
+import nodo_sonar as nsonar
 #Definimos variables de conteo y banderas
 N = 100 # numero de escaneos a promediar
 counter=0
@@ -26,7 +27,7 @@ n_points1=0
 def callback(data):
     #Definimos variables y rutas de carpetas
     global ruta_datos
-    ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
+    ruta_datos = "/home/pablotrujillo/catkin_ws_final/src/pagina/src"
     global N
     global counter
     global counter1
@@ -115,24 +116,18 @@ def callback(data):
                 print("Creando archico de prueba intensidad")
                 df_int.to_csv(ruta_datos+"/prueba_int.csv",index=False) 
                 
-                #Comando para terminar el ciclo "Callback"
-                rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
-
-        
             else:
                 #Si el archivo de control no existe genera el archivo de prueba
                 print("Creando archivo de control intensidad")
                 df_int.to_csv(ruta_datos+"/control_int.csv",index=False) 
-                rospy.signal_shutdown("MORE THAN {} GRIPPER TIMEOUTS")
 
 def listener():
     #Nodo de ROS que recibe los datos del sensor LiDAR
     rospy.init_node('ROS_to_EXCEL', anonymous=True)
     rospy.Subscriber('/scan', LaserScan, callback)
-    rospy.spin()
+    time.sleep(2.2)
+    nsonar.listener_sonar()
 
 
 if __name__ == '__main__':
     listener()
-
-    

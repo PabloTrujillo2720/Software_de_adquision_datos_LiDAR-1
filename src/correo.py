@@ -13,8 +13,6 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from datetime import datetime
-
-#import datos_sonar as data_s
 def root_mean_squared_error(x,y):
     n=len(x.T)
     error = x.T-y.T
@@ -105,7 +103,6 @@ def mail():
     global ruta_datos
     global valor_rmse
     global correo1
-    global data_sonar
     #calculo valores estadisticos
     nombre()
     graficas()
@@ -118,24 +115,10 @@ def mail():
     XNSE= round(NSE_(X_control, X_prueba),3)
     YNSE= round(NSE_(Y_control, Y_prueba),3)
     iNSE= round(NSE_(intesidad_base, intesidad_prueba),3)
-    #data_s.listener_sonar()
-    RMSE()
+    
+    #RMSE()
 
     #Lectura de archivo con valores temporales de la pagina web 
-    df_sonar = pd.read_csv("temp_sonar.csv")
-    altura = df_sonar.iloc[0][0]
-    lista_altura = []
-    lista_altura.append(altura[8])
-    lista_altura.append(altura[9])
-    lista_altura.append(altura[10])
-    lista_altura.append(altura[11])
-    lista_altura.append(altura[12])
-    lista_altura.append(altura[13])
-    lista_altura.append(altura[14])
-    lista_altura.append(altura[15])
-
-    altura = str("".join(lista_altura))
-
     df = pd.read_csv("temp2.csv")
     angulo_min_ingresado = str(df.loc[0][0])
     angulo = angulo_min_ingresado
@@ -144,14 +127,20 @@ def mail():
     nombre1 = str(df.loc[3][0])
     correo1 = str(df.loc[4][0])
     valor_rmse = str(0.5)
+
+    #Envio de datos del sensor de Ultrasonido 
+    df_sonar = pd.read_csv("temp_sonar.csv")
+    x = str(df_sonar.loc[0][0])
+    y = x[8:17]
+    sonar = y + " "+"mm"
     #Datos envio correo electronico y cuerpo del correo
-    ruta_datos = "/home/pablotrujillo/catkin_ws_final/src"
+    ruta_datos = "/home/pablotrujillo/catkin_ws_final/src/pagina/src"
     remitente = 'Pruebaslidar@gmail.com'
-    email_contrasena = 'zefotvjlzsytimez'
+    email_contrasena = 'cknxvnpljkksujsb'
     destinatarios = correo1
     asunto =  "Prueba"+" "+ name
-    cuerpo = ('Hola'+' '+nombre1+" "+'tus variables son las siguientes:\n''Valor XRMSE:'+ " " + str(XRMSE) + '\n' +'Valor YRMSE:' + " "+ str(YRMSE) + '\n' + 'Valor iRMSE:' + " "+ str(iRMSE)
-                                          + '\n' + 'Valor XNSE:'+ " " + str(XNSE) +'\n'+ 'Valor YNSE:' + " " + str(YNSE) +'\n'+ 'Valor iNSE:' + " "+ str(iNSE)+'\n'+ "Angulo minimo:"+ " "+ angulo_min_ingresado + '\n'+ "Angulo maximo:"+ " "+ angulo_max_ingresado + '\n'+ "Turbidez:"+" "+ turbidez + '\n'+ "Altura:"+" "+ altura + " " + "(mm)")         
+    cuerpo = ('Hola'+' '+nombre1+" "+'tus variables son las siguientes:\n''Valor XRMSE:' + str(XRMSE) + '\n' +'Valor YRMSE:' + str(YRMSE) + '\n' + 'Valor iRMSE:' + str(iRMSE)
+                                          + '\n' + 'Valor XNSE:' + str(XNSE) +'\n'+ 'Valor YNSE:' + str(YNSE) +'\n'+ 'Valor iNSE:' + str(iNSE)+'\n'+ "Angulo minimo:"+ " "+ angulo_min_ingresado + '\n'+ "Angulo maximo:"+ " "+ angulo_max_ingresado + '\n'+ "Turbidez:"+" "+ turbidez+ '\n'+ "Distancia:"+" "+ sonar)         
     
     ruta_adjunto1 = ruta_datos + "/Temp_graficas.csv"
     ruta_adjunto2 = ruta_datos + "/Temp_graficas.png"
@@ -197,7 +186,7 @@ def mail():
     sesion_smtp.starttls()
 
     # Iniciamos sesión en el servidor
-    sesion_smtp.login('pruebaslidar@gmail.com','zefotvjlzsytimez')
+    sesion_smtp.login('pruebaslidar@gmail.com','cknxvnpljkksujsb')
 
     # Convertimos el objeto mensaje a texto
     texto = mensaje.as_string()
